@@ -16,6 +16,8 @@ async function getProfile(username) {
 async function getRepos(username) {
   const resp = await fetch(APIURL + username + "/repos");
   const data = await resp.json();
+  console.log(data);
+  addRepos(data);
 }
 
 function createUserCard(user) {
@@ -40,9 +42,25 @@ function createUserCard(user) {
         </div>
     `;
 
-    mainEl.innerHTML = cardHTML
+  mainEl.innerHTML = cardHTML;
 }
 
-function addRepos(params) {
-    
+function addRepos(repos) {
+  const reposEl = document.querySelector("#repos");
+
+  // ordenar pelas estrelas
+  // utilizar somente os 10 primeiros objetos
+  // listagem para criar os elementos
+  repos
+    .sort((a, b) => b.stargazers_count - a.stargazers_count)
+    .slice(0, 10)
+    .forEach((repo) => {
+      const repoEl = document.createElement("a");
+      repoEl.classList.add("repo");
+
+      repoEl.href = repo.html_url;
+      repoEl.target = "_blank";
+      repoEl.innerHTML = repo.name;
+      reposEl.appendChild(repoEl);
+    });
 }
